@@ -3,18 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>IO Chat</title>
-    <script src="jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <style>
+        #messageArea{
+            display:none;
+        }
+
+    </style>
 </head>
 <body>
+<div id="userFormArea">
+    <form id="userForm">
+        Room id : <input id="uniqueId" />
+        User name : <input id="username" />
+    <input type="submit" value="join" />
+    </form>
+</div>
+<div id="messageArea">
 <div class="chat" id="chat">
 
 </div>
+
 <form id="messageForm">
     <textarea id="message"></textarea>
     <input type="submit" value="Send Message" />
 </form>
-
+</div>
 <script>
 
     $(function(){
@@ -23,16 +38,48 @@
          var $message =  $('#message');
          var $chat = $('#chat');
 
+         var $userFormArea = $('#userFormArea');
+         var $userForm = $('#userForm');
+         var $uniqueId = $('#uniqueId');
+         var $messageArea = $('#messageArea');
+         var $username = $('#username');
+
+
          $messageForm.submit(function(e){
             e.preventDefault();
-            socket.emit('send message', $message.val());
+            socket.emit('send message all', $message.val() , function(data){
+
+            });
             $message.val('');
 
          });
 
-         socket.on('new message', function(data){
-            $chat.append('<div class="well">' + data.msg +  '</div>');
+         socket.on('new message all', function(data){
+            $chat.append('<div class="well">' + data.uniqueid + ':' + data.user + ':' + data.msg +  '</div>');
          });
+
+         $userForm.submit(function(e){
+            e.preventDefault();
+            console.log($uniqueId.val());
+            socket.emit('new user', $uniqueId.val(), $username.val() , function(data){
+                if(data){
+                    $userFormArea.hide();
+                    $messageArea.show();
+                }
+            }
+
+            );
+            $uniqueId.val('');
+
+         });
+
+<!--         socket.on('unique id',function(data){-->
+<!--          var html = '';-->
+<!--          for(i=0 ; i< data.length ;i++){-->
+<!--            html += '<li class="list-items">' + data[i]+ '</li>' ;-->
+<!--          }-->
+<!--          users.html(html);-->
+<!--          });-->
     });
 </script>
 </body>
