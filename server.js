@@ -49,7 +49,7 @@ io.sockets.on('connection', function(socket){
                console.log("true");
                console.log("uid",socket.uniqueid);
 //            uniqueId[socket.uniqueid].emit('new message', {msg: data , user: socket.uniqueid});
-              io.to(socket.uniqueid).emit('new message', {msg: data , uniqueid: socket.uniqueid , user : socket.username});
+              socket.to(socket.uniqueid).emit('new message', {msg: data , uniqueid: socket.uniqueid , user : socket.username});
         }
         else{
         console.log(data);
