@@ -65,9 +65,15 @@ io.sockets.on('connection', function(socket){
         }
         else{
 //        console.log(data);
-        io.sockets.emit('new message', {msg: data , uniqueid: socket.uniqueid , user : socket.username});}
+        io.sockets.emit('new message all', {msg: data , uniqueid: socket.uniqueid , user : socket.username});}
     });
 
+    socket.on('who is typing', function(data){
+        socket.to(socket.uniqueid).emit('typing info', {user : socket.username});
+    });
+    socket.on('false typing', function(data){
+        socket.to(socket.uniqueid).emit('typing info', {user : 'false'});
+    });
     // New user
 
 
