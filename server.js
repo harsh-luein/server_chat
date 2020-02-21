@@ -19,8 +19,8 @@ io.sockets.on('connection', function(socket){
 
      socket.on('new user', function(data,user, callback){
         callback(true);
-        console.log("room ",data);
-        console.log("user ",user);
+//        console.log("room ",data);
+//        console.log("user ",user);
         socket.join(data);
         socket.uniqueid = data;
         socket.username = user;
@@ -46,26 +46,26 @@ io.sockets.on('connection', function(socket){
 
     socket.on('send message', function(data){
         if(socket.uniqueid in uniqueId){
-               console.log("true");
-               console.log("uid",socket.uniqueid);
+//               console.log(data);
+//               console.log("uid",socket.uniqueid);
 //            uniqueId[socket.uniqueid].emit('new message', {msg: data , user: socket.uniqueid});
               socket.to(socket.uniqueid).emit('new message', {msg: data , uniqueid: socket.uniqueid , user : socket.username});
         }
         else{
-        console.log(data);
-        io.sockets.emit('new message', {msg: data , user: socket.uniqueid});}
+//        console.log(data);
+        io.sockets.emit('new message', {msg: data , uniqueid: socket.uniqueid , user : socket.username});}
     });
 
         socket.on('send message all', function(data){
         if(socket.uniqueid in uniqueId){
-               console.log("true");
-               console.log("uid",socket.uniqueid);
+//               console.log("true");
+//               console.log("uid",socket.uniqueid);
 //            uniqueId[socket.uniqueid].emit('new message', {msg: data , user: socket.uniqueid});
               io.in(socket.uniqueid).emit('new message all', {msg: data , uniqueid: socket.uniqueid , user : socket.username});
         }
         else{
-        console.log(data);
-        io.sockets.emit('new message', {msg: data , user: socket.uniqueid});}
+//        console.log(data);
+        io.sockets.emit('new message', {msg: data , uniqueid: socket.uniqueid , user : socket.username});}
     });
 
     // New user
