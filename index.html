@@ -24,6 +24,9 @@
 <div class="chat" id="chat">
 
 </div>
+        <div class="typing" id="typing">
+
+</div>
 
 <form id="messageForm">
     <textarea id="message"></textarea>
@@ -57,6 +60,22 @@
          socket.on('new message all', function(data){
             $chat.append('<div class="well">' + data.uniqueid + ':' + data.user + ':' + data.msg +  '</div>');
          });
+
+             // Who is typing the message
+    var timer;
+    $('#message').on('keypress', function(){
+      socket.emit('who is typing', $username.val());
+         window.clearTimeout(timer);
+        timer = window.setTimeout(function(){socket.emit('false typing', 'false');},3000);
+    });
+    socket.on('typing info', function(data){
+    $('#typing').empty();
+    if(data.user != 'false'){
+       $('#typing').append('<div class="typing">'+  data.user + ' is typing ...</div>');
+       }
+       });
+
+    // end who is typing
 
          $userForm.submit(function(e){
             e.preventDefault();
